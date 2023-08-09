@@ -45,13 +45,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置密码  默认为加密后的123456
         employee.setPassword(DigestUtils.md5DigestAsHex((PasswordConstant.DEFAULT_PASSWORD).getBytes()));
         //设置创建时间
-        employee.setCreateTime(LocalDateTime.now());
-        //设置修改时间
-        employee.setUpdateTime(LocalDateTime.now());
-        //设置创建人
-        employee.setCreateUser(BaseContext.getCurrentId());
-        //设置修改时间
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateTime(LocalDateTime.now());
+//        //设置修改时间
+//        employee.setUpdateTime(LocalDateTime.now());
+//        //设置创建人
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        //设置修改时间
+//        employee.setUpdateUser(BaseContext.getCurrentId());
         //调用mapper层
         employeeMapper.insert(employee);
     }
@@ -111,6 +111,40 @@ public class EmployeeServiceImpl implements EmployeeService {
         long total = employeePage.getTotal();
         List<Employee> result = employeePage.getResult();
         return new PageResult(total,result);
+    }
+
+    /**
+     * 启用禁用员工
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //采用建造者模式创建对象
+        Employee employee = Employee.builder().id(id).status(status).build();
+        employeeMapper.update(employee);
+    }
+
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    @Override
+    public Employee getById(Long id) {
+        Employee employee=employeeMapper.getById(id);
+        return employee;
+    }
+
+    /**
+     * 更新员工信息
+     * @param employeeDTO
+     */
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee=new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employeeMapper.update(employee);
     }
 
 }
