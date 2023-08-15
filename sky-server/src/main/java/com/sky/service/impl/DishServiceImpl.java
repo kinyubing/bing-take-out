@@ -12,12 +12,15 @@ import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.DishSetmealMapper;
 import com.sky.result.PageResult;
+import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -92,6 +95,49 @@ public class DishServiceImpl implements DishService {
             dishMapper.deleteById(id);
             //批量删除对应的口味
             dishFlavorMapper.deleteBatch(id);
+        }
+
+    }
+    /**
+     * 根据id回显菜品数据
+     * @param id
+     * @return
+     */
+    @Override
+    public DishVO getByIdWithFlavor(Long id) {
+        //根据id查询菜品数据
+        Dish dish = dishMapper.getById(id);
+        //根据dishId查询相关口味列表
+        List<DishFlavor> flavors=dishFlavorMapper.getByDishId(id);
+        //新建一个DishVo对象
+        DishVO dishVO=new DishVO();
+        BeanUtils.copyProperties(dish,dishVO);
+        dishVO.setFlavors(flavors);
+        return dishVO;
+    }
+    /**
+     * 修改菜品
+     * @param dishDTO
+     * @return
+     */
+    @Override
+    public void updateWithFlavor(DishDTO dishDTO) {
+        //修改菜品
+        Dish dish=new Dish();
+        BeanUtils.copyProperties(dishDTO,dish);
+        dishMapper.update(dish);
+        //修改菜品对应的口味表
+        //1.删除菜品对应的所有口味
+        dishFlavorMapper.deleteBatch(dish.getId());
+        //2.插入菜品对应的所有口味
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        if(flavors!=null&&flavors.size()>0){
+            //遍历口味表设置每个口味的dishId
+            flavors.forEach(dishFlavor -> {
+                dishFlavor.setDishId(dish.getId());
+            });
+            //向口味表中批量插入数据
+            dishFlavorMapper.saveBatch(flavors);
         }
 
     }
