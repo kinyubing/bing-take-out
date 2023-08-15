@@ -1,12 +1,16 @@
 package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
+import com.sky.mapper.DishSetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -23,6 +27,8 @@ public class DishServiceImpl implements DishService {
     private DishMapper dishMapper;
     @Autowired
     private DishFlavorMapper dishFlavorMapper;
+    @Autowired
+    private DishSetmealMapper dishSetmealMapper;
     /**
      * 菜品添加
      * @param dishDTO
@@ -57,5 +63,36 @@ public class DishServiceImpl implements DishService {
     public PageResult page(DishPageQueryDTO dishPageQueryDTO) {
         Page<DishVO> page=dishMapper.page(dishPageQueryDTO);
         return new PageResult(page.getTotal(),page.getResult());
+    }
+    /**
+     * 菜品批量删除
+     * @param ids
+     * @return
+     */
+    @Override
+    public void deleteWithFlavor(List<Long> ids) {
+        //1.判断菜品的状态，起售中的菜品不能删除
+        for (Long id : ids) {
+            //根据id查询菜品
+            Dish dish=dishMapper.getById(id);
+            if(dish.getStatus()== StatusConstant.ENABLE){
+                //菜品处于起售中不能删除，抛出异常
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+            }
+        }
+        //2.判断菜品是否关联了相关套餐，关联了相关套餐的菜品不能删除
+        List<Long> setmealIds=dishSetmealMapper.selectByDishId(ids);
+        if(setmealIds!=null&&setmealIds.size()>0){
+            //菜品关联了相关套餐不能删除，抛出异常
+            throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
+        }
+        //3.删除菜品+删除菜品所对应的口味
+        for (Long id : ids) {
+            //删除菜品
+            dishMapper.deleteById(id);
+            //批量删除对应的口味
+            dishFlavorMapper.deleteBatch(id);
+        }
+
     }
 }
