@@ -10,9 +10,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -21,6 +23,9 @@ import java.util.List;
 public class DishController {
     @Autowired
     private DishService dishService;
+    //自动装配
+    @Autowired
+    private RedisTemplate redisTemplate;
     /**
      * 菜品添加
      * @param dishDTO
@@ -30,6 +35,9 @@ public class DishController {
     @ApiOperation("添加菜品")
     public Result saveWithFlavor(@RequestBody DishDTO dishDTO){
         dishService.saveWithFlavor(dishDTO);
+        //菜品添加只会影响该菜品相关联的分类，只清理该分类的缓存
+        String key="dish_"+dishDTO.getCategoryId();
+        cleanCache(key);
         return Result.success();
     }
 
@@ -54,6 +62,8 @@ public class DishController {
     @ApiOperation("批量删除菜品")
     public Result deleteWithFlavor(@RequestParam List<Long> ids){
         dishService.deleteWithFlavor(ids);
+        //菜品批量删除会影响到多个分类，所以删除所有的缓存
+        cleanCache("dish_*");
         return Result.success();
     }
 
@@ -79,6 +89,17 @@ public class DishController {
     public Result updateWithFlavor(@RequestBody DishDTO dishDTO)
     {
         dishService.updateWithFlavor(dishDTO);
+        //修改菜品有可能会影响两个分类，所以删除所有的缓存
+        cleanCache("dish_*");
         return Result.success();
+    }
+
+    /**
+     * 根据传入的模式清理缓存
+     * @param pattern
+     */
+    private void cleanCache(String pattern){
+        Set keys = redisTemplate.keys(pattern);//获取所有符合该模式的key
+        redisTemplate.delete(keys);
     }
 }
