@@ -4,6 +4,8 @@ import com.sky.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Map;
+
 @Mapper
 public interface UserMapper {
 
@@ -21,4 +23,11 @@ public interface UserMapper {
      */
     @Select("select * from user where openid=#{openId}")
     public User getUserByOpenid(String openId);
+
+    /**
+     * 查询特定条件下用户的数量
+     * @param map
+     * @return
+     */
+    Integer getUserNumByMap(Map map);
 }
