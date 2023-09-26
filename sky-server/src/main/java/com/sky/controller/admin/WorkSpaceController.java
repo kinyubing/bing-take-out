@@ -51,6 +51,7 @@ public class WorkSpaceController {
     @GetMapping("/overviewOrders")
     @ApiOperation("查询订单管理数据")
     public Result<OrderOverViewVO> orderOverView(){
+
         return Result.success(workspaceService.getOrderOverView());
     }
 
@@ -61,6 +62,7 @@ public class WorkSpaceController {
     @GetMapping("/overviewDishes")
     @ApiOperation("查询菜品总览")
     public Result<DishOverViewVO> dishOverView(){
+
         return Result.success(workspaceService.getDishOverView());
     }
 

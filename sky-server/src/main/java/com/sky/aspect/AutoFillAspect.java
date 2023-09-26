@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
-//实现自动填充字段的切面类
+//实现自动填充字段的切面类，切面其实利用的是反射
 @Component   //spring能识别的bean
 @Aspect   //定义为切面类
 @Slf4j
