@@ -11,8 +11,8 @@
 
     <groupId>com.sky</groupId>
     <artifactId>sky-take-out</artifactId>
-    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>  <!--打包方式为pom-->
     <!--管理的模块-->
     <modules>
         <module>sky-common</module>
@@ -72,13 +72,13 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper}</version>
             </dependency>
-
+            <!--导入swagger增强版的依赖，生成接口文档和进行接口调试-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j}</version>
             </dependency>
-
+            <!--导入spring aop的相关注解-->
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
@@ -90,13 +90,13 @@
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectj}</version>
             </dependency>
-
+            <!--导入安全校验机制生成token令牌-->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt}</version>
             </dependency>
-
+            <!--导入阿里云对象存储服务oos-->
             <dependency>
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>

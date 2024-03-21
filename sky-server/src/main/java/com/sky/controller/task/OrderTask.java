@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component  //bean被Spring容器管理
 @Slf4j
-public class Task {
+public class OrderTask {
     @Autowired
     private OrdersMapper ordersMapper;
     /**

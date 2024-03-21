@@ -9,7 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("userShopController")  //指定容器中生成的bean的名字
-@Api(tags = "店铺相关接口")
+@Api(tags = "用户端店铺相关接口")
 @RequestMapping("/user/shop")
 @Slf4j
 public class ShopController {

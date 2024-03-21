@@ -11,25 +11,11 @@ import java.util.List;
 
 public interface SetmealService {
     /**
-     * 根据分类id查询套餐
-     *
-     * @param setmeal
-     * @return
-     */
-    List<Setmeal> list(Setmeal setmeal);
-    /**
-     * 根据套餐id查询包含的菜品列表
-     *
-     * @param id
-     * @return
-     */
-    List<DishItemVO> getDishItemById(Long id);
-    /**
-     * 新增套餐
+     * 新增套餐，同时需要保存套餐和菜品的关联关系
      * @param setmealDTO
-     * @return
      */
     void saveWithDish(SetmealDTO setmealDTO);
+
     /**
      * 分页查询
      * @param setmealPageQueryDTO
@@ -39,7 +25,6 @@ public interface SetmealService {
     /**
      * 批量删除套餐
      * @param ids
-     * @return
      */
     void deleteBatch(List<Long> ids);
     /**
@@ -60,4 +45,18 @@ public interface SetmealService {
      * @param id
      */
     void startOrStop(Integer status, Long id);
+    /**
+     * 条件查询
+     * @param setmeal
+     * @return
+     */
+    List<Setmeal> list(Setmeal setmeal);
+    /**
+     * 根据套餐id查询包含的菜品列表
+     *
+     * @param id
+     * @return
+     */
+
+    List<DishItemVO> getDishItemById(Long id);
 }

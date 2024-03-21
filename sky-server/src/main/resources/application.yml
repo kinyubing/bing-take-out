@@ -15,7 +15,7 @@ spring:
   redis:
     host: ${sky.redis.host}
     port: ${sky.redis.port}
-    password: ${sky.redis.password}
+    # password: ${sky.redis.password}
     database: ${sky.redis.database}
 
 mybatis:
@@ -54,3 +54,7 @@ sky:
   wechat:
     appid: ${sky.wechat.appid}
     secret: ${sky,wechat.secret}
+  shop:
+    address: 黑龙江省哈尔滨市松北区学海街1号
+  baidu:
+    ak: SR4ayaY528CRNlw7O07ne7qybjwwUUVr

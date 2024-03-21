@@ -33,27 +33,7 @@ public class SetmealServiceImpl implements SetmealService {
     private SetmealDishMapper setmealDishMapper;
     @Autowired
     private DishMapper dishMapper;
-    /**
-     * 根据分类id查询套餐
-     *
-     * @param setmeal
-     * @return
-     */
-    @Override
-    public List<Setmeal> list(Setmeal setmeal) {
-        //调用mapper层的查询方法
-        List<Setmeal> setmealList=setmealMapper.list(setmeal);
-        return setmealList;
-    }
-    /**
-     * 根据套餐id查询包含的菜品列表
-     *
-     * @param id
-     * @return
-     */
-    public List<DishItemVO> getDishItemById(Long id) {
-        return setmealMapper.getDishItemBySetmealId(id);
-    }
+
     /**
      * 新增套餐，同时需要保存套餐和菜品的关联关系
      * @param setmealDTO
@@ -77,6 +57,7 @@ public class SetmealServiceImpl implements SetmealService {
         //保存套餐和菜品的关联关系
         setmealDishMapper.insertBatch(setmealDishes);
     }
+
     /**
      * 分页查询
      * @param setmealPageQueryDTO
@@ -90,10 +71,10 @@ public class SetmealServiceImpl implements SetmealService {
         Page<SetmealVO> page = setmealMapper.pageQuery(setmealPageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
     }
+
     /**
      * 批量删除套餐
      * @param ids
-     * @return
      */
     @Transactional
     public void deleteBatch(List<Long> ids) {
@@ -112,6 +93,7 @@ public class SetmealServiceImpl implements SetmealService {
             setmealDishMapper.deleteBySetmealId(setmealId);
         });
     }
+
     /**
      * 根据id查询套餐和套餐菜品关系
      *
@@ -155,6 +137,7 @@ public class SetmealServiceImpl implements SetmealService {
         //3、重新插入套餐和菜品的关联关系，操作setmeal_dish表，执行insert
         setmealDishMapper.insertBatch(setmealDishes);
     }
+
     /**
      * 套餐起售、停售
      * @param status
@@ -180,4 +163,23 @@ public class SetmealServiceImpl implements SetmealService {
                 .build();
         setmealMapper.update(setmeal);
     }
+    /**
+     * 条件查询
+     * @param setmeal
+     * @return
+     */
+    public List<Setmeal> list(Setmeal setmeal) {
+        List<Setmeal> list = setmealMapper.list(setmeal);
+        return list;
+    }
+
+    /**
+     * 根据id查询菜品选项
+     * @param id
+     * @return
+     */
+    public List<DishItemVO> getDishItemById(Long id) {
+        return setmealMapper.getDishItemBySetmealId(id);
+    }
+
 }

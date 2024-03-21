@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,8 +35,7 @@ public class SetmealController {
      */
     @PostMapping
     @ApiOperation("新增套餐")
-    //在套餐进行新增是要删除指定分类下的套餐缓存
-    @CacheEvict(cacheNames = "setmealCache",key = "#setmealDTO.getCategoryId()")
+    @CacheEvict(cacheNames ="setmealCache",key ="#setmealDTO.categoryId" )//精准删除分类缓存
     public Result save(@RequestBody SetmealDTO setmealDTO) {
         setmealService.saveWithDish(setmealDTO);
         return Result.success();
@@ -51,6 +51,7 @@ public class SetmealController {
         PageResult pageResult = setmealService.pageQuery(setmealPageQueryDTO);
         return Result.success(pageResult);
     }
+
     /**
      * 批量删除套餐
      * @param ids
@@ -58,8 +59,7 @@ public class SetmealController {
      */
     @DeleteMapping
     @ApiOperation("批量删除套餐")
-    //涉及多个分类时将所有的缓存全部删除
-    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
+    @CacheEvict(cacheNames ="setmealCache",allEntries = true )//删除所有分类缓存
     public Result delete(@RequestParam List<Long> ids){
         setmealService.deleteBatch(ids);
         return Result.success();
@@ -85,11 +85,12 @@ public class SetmealController {
      */
     @PutMapping
     @ApiOperation("修改套餐")
-    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
+    @CacheEvict(cacheNames ="setmealCache",allEntries = true )//删除所有分类缓存
     public Result update(@RequestBody SetmealDTO setmealDTO) {
         setmealService.update(setmealDTO);
         return Result.success();
     }
+
     /**
      * 套餐起售停售
      * @param status
@@ -98,7 +99,7 @@ public class SetmealController {
      */
     @PostMapping("/status/{status}")
     @ApiOperation("套餐起售停售")
-    @CacheEvict(cacheNames = "setmealCache",allEntries = true)
+    @CacheEvict(cacheNames ="setmealCache",allEntries = true )//删除所有分类缓存
     public Result startOrStop(@PathVariable Integer status, Long id) {
         setmealService.startOrStop(status, id);
         return Result.success();

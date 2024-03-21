@@ -92,17 +92,18 @@
             </if>
         </where>
     </select>
+   <!-- 字段名与bean属性名匹配上-->
     <select id="getSalesTop10List" resultType="com.sky.dto.GoodsSalesDTO">
-        select od.name,sum(od.number) total_number from order_detail od,orders o
+        select od.name,sum(od.number) number from order_detail od,orders o
         where od.order_id=o.id and o.status=5
         <if test="begin!=null">
             and o.order_time &gt; #{begin}
         </if>
         <if test="end!=null">
-            and o.order_time &lt; #{end}
+            and o.order_time &lt;#{end}
         </if>
         group by od.name
-        order by total_number desc
+        order by number desc
         limit 0,10
     </select>
 

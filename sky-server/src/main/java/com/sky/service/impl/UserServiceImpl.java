@@ -66,8 +66,8 @@ public class UserServiceImpl implements UserService {
         map.put("grant_type","authorization_code");
         //通过调用微信接口服务获取用户的openid
         String json = HttpClientUtil.doGet(url, map);
-        //json转换  JSON:fastJson
-        JSONObject jsonObject = JSON.parseObject(json);
+        //json转换  JSON:fastJson(将java对象->json,将json->java对象）
+        JSONObject jsonObject = JSON.parseObject(json);//解析成对象（是一个存储键值对数据的对象）
         //获取openid
         String openid = jsonObject.getString("openid");
         return openid;

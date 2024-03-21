@@ -191,6 +191,9 @@ public class ReportServiceImpl implements ReportService {
         LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
         //获取销量前十的商品列表(订单已经为完成状态）
         List<GoodsSalesDTO> list=ordersMapper.getSalesTop10List(beginTime,endTime);
+        for (GoodsSalesDTO goodsSalesDTO : list) {
+            System.out.println(goodsSalesDTO.getName()+":"+goodsSalesDTO.getNumber());
+        }
         //获取所有的商品名称的列表
         List<String> nameList = list.stream().map(GoodsSalesDTO::getName).collect(Collectors.toList());
         String nameList2= StringUtils.join(nameList, ',');

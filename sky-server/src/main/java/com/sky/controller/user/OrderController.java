@@ -35,7 +35,8 @@ public class OrderController {
       return Result.success(orderSubmitVO);
     }
     /**
-     * 订单支付
+     * 小程序用户点击确认支付，
+     * 微信小程序发送请求给后端服务器进行订单支付
      *
      * @param ordersPaymentDTO
      * @return
@@ -97,7 +98,7 @@ public class OrderController {
         return Result.success();
     }
     /**
-     * 再来一单
+     * 再来一单:就是将原订单中的商品重新加入到购物车中
      *
      * @param id
      * @return

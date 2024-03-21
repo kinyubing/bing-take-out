@@ -36,7 +36,7 @@ public class DishController {
     @ApiOperation("添加菜品")
     public Result saveWithFlavor(@RequestBody DishDTO dishDTO){
         dishService.saveWithFlavor(dishDTO);
-        //菜品添加只会影响该菜品相关联的分类，只清理该分类的缓存
+        //菜品添加只会影响该菜品相关联的分类，只清理该分类下的缓存
         String key="dish_"+dishDTO.getCategoryId();
         cleanCache(key);
         return Result.success();
@@ -113,5 +113,20 @@ public class DishController {
     public Result<List<Dish>> list(Long categoryId){
         List<Dish> list = dishService.list(categoryId);
         return Result.success(list);
+    }
+
+    /**
+     * 根据菜品id和状态对菜品状态进行起售或停售
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation(value = "菜品起售停售")
+    public Result startOrStop(@PathVariable Integer status, Long id){
+        dishService.startOrStop(status,id);
+        //起售或停售此时并不知道所关联的分类id,还要查询数据库，所以删除所有的缓存
+        cleanCache("dish_*");
+        return Result.success();
     }
 }
